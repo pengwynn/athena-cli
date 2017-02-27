@@ -43,10 +43,34 @@ command :database do |c|
       puts athena.databases
     end
   end
+
+  c.desc "Create a new database"
+  c.arg_name "database"
+  c.command :create do |add|
+    add.action do |global_options,options,args|
+      puts athena.database_create(args.first)
+    end
+  end
+
+  c.desc "Drop an existing database"
+  c.arg_name "database"
+  c.command :drop do |add|
+    add.action do |global_options,options,args|
+      puts athena.database_drop(args.first)
+    end
+  end
 end
 
 desc 'Manage tables in Athena databases'
 command :table do |c|
+  c.desc "Create table"
+  c.arg_name "database.table"
+  c.command :create do |add|
+    add.action do |global_options,options,args|
+      puts "TODO: Create table"
+    end
+  end
+
   c.desc "Describe a table"
   c.arg_name "database.table"
   c.command :describe do |add|
@@ -96,6 +120,19 @@ command :table do |c|
       puts athena.table_drop(args.first)
     end
   end
+end
+
+desc 'Manage columns in Athena tables'
+command :column do |c|
+  c.desc "List columns in a table"
+  c.arg_name "database.table"
+  c.command :list do |add|
+    add.action do |global_options,options,args|
+      puts athena.table_columns(args.first)
+    end
+  end
+
+  c.default_command :list
 end
 
 desc 'Manage partitions in Athena database tables'
