@@ -155,9 +155,16 @@ def check_class_path
   unless class_path =~ /AthenaJDBC/
     jar_path =  File.expand_path(File.join([File.dirname(__FILE__),'..', 'jdbc','AthenaJDBC41-1.0.0.jar']))
     msg = <<~MSG
-    JRuby requires JDBC driver to be in your $CLASSPATH. Please run:
+    JRuby requires JDBC driver to be in your Java class path.
+    For download instructions, see:
 
-    export CLASSPATH="$CLASSPATH:#{jar_path}"
+        http://docs.aws.amazon.com/athena/latest/ug/connect-with-jdbc.html
+
+    After downloading, add /path/to/driver.jar to your CLASSPATH environment variable.
+
+    Example:
+
+        export CLASSPATH="$CLASSPATH:~/src/AthenaJDB41-1.0.0.jar"
     MSG
     exit_now! msg
   end
