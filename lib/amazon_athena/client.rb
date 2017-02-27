@@ -20,6 +20,10 @@ module AmazonAthena
       @databases = connection.query("SHOW DATABASES;").raw_output
     end
 
+    def database_drop(database)
+      "(TODO): DROP DATABASE #{database_table};"
+    end
+
     def tables(database)
       return @tables[database] if defined?(@tables) && @tables[database]
 
@@ -35,6 +39,10 @@ module AmazonAthena
       "(TODO): DROP TABLE #{database_table};"
     end
 
+    def table_columns(database_table)
+      connection.query("SHOW COLUMNS IN #{database_table}").raw_output
+    end
+
     def table_show_create(database_table)
       connection.query("SHOW CREATE TABLE #{database_table};").raw_output
     end
@@ -44,12 +52,16 @@ module AmazonAthena
     end
 
     def table_repair(database_table)
-      connection.query("MSCK REPAIR TABLE #{database_table};").raw_output
+      connection.query("MSCK REPAIR TABLE #{database_table};")
+
+      partitions!(database_table)
     end
 
     def table_properties(database_table)
       result = connection.query("SHOW TBLPROPERTIES #{database_table};").raw_output
       data = Hash[*result.split("\n").map {|line| line.split("\t")}.flatten]
+
+      data[:name] = database_table
 
       if type = data.delete('EXTERNAL')
         data[:external] = type

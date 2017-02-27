@@ -1,10 +1,10 @@
 module JDBCHelper
   class Connection
     class ResultSet
-      def raw_output
+      def raw_output(column_index = 1)
         lines = []
         begin
-          lines << @rset.getString(1)
+          lines << @rset.getString(column_index)
         end while @rset.next
 
         lines.join("\n")
