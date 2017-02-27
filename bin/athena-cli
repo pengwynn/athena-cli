@@ -48,7 +48,7 @@ end
 desc 'Manage tables in Athena databases'
 command :table do |c|
   c.desc "Describe a table"
-  c.arg_name "database"
+  c.arg_name "database.table"
   c.command :describe do |add|
     add.action do |global_options,options,args|
       puts athena.table_describe(args.first)
@@ -56,7 +56,7 @@ command :table do |c|
   end
 
   c.desc "List tables in a database"
-  c.arg_name "database"
+  c.arg_name "database.table"
   c.command :list do |add|
     add.action do |global_options,options,args|
       puts athena.tables(args.first)
@@ -101,22 +101,19 @@ end
 desc 'Manage partitions in Athena database tables'
 command :partition do |c|
   c.desc "List partitions in a table"
+  c.arg_name "database.table"
   c.command :list do |add|
-    add.flag [:d,:database], :required => true
     add.action do |global_options,options,args|
       puts athena.partitions(args.first)
     end
   end
 
   c.desc "Drop partitions in a table"
-  c.arg_name "key=value,key=value:key=value,key=value"
+  c.arg "database.table"
+  c.arg "key=value,key=value:key=value,key=value"
   c.command :drop do |add|
-    add.flag [:d,:database], :required => true
     add.action do |global_options,options,args|
-      database = options[:d]
-      partition = args.shift
-
-      puts athena.partitions_drop(database, partition)
+      puts athena.partitions_drop(*args)
     end
   end
 end
