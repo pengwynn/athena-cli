@@ -16,7 +16,7 @@ version AmazonAthena::VERSION
 subcommand_option_handling :normal
 arguments :strict
 
-desc 'Check for required AWS setup.'
+desc 'Check for required AWS setup'
 command :doctor do |c|
   c.action do |global_options,options,args|
     if access_key.nil? || access_secret.nil?
