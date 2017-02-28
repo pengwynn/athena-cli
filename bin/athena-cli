@@ -2,6 +2,7 @@
 #
 require 'gli'
 require 'amazon_athena'
+require 'amazon_athena/commands/list_databases'
 
 def athena
   AmazonAthena::Client.new
@@ -15,6 +16,11 @@ version AmazonAthena::VERSION
 
 subcommand_option_handling :normal
 arguments :strict
+
+switch [:p, :preview],
+  :default_value => false,
+  :desc => "Output the SQL statement instead of running",
+  :negatable => false
 
 desc 'Check for required AWS setup'
 command :doctor do |c|
@@ -40,7 +46,9 @@ command :database do |c|
   c.desc "List databases"
   c.command :list do |add|
     add.action do |global_options,options,args|
-      puts athena.databases
+      cmd = AmazonAthena::Commands::ListDatabases.new
+
+      execute(cmd, global_options[:p])
     end
   end
 
@@ -212,6 +220,16 @@ def table(data)
   data.each do |key, value|
     printf "%##{longest_key.length}s %s\n", key, value
   end
+end
+
+def execute(cmd, preview = false)
+  output = if preview
+             cmd.statement
+           else
+             cmd.run(athena.connection)
+           end
+
+  puts output
 end
 
 exit run(ARGV)

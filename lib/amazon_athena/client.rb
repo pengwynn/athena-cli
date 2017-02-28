@@ -1,4 +1,5 @@
 require "jdbc_helper/athena"
+require_relative "commands/list_databases"
 
 module AmazonAthena
   class Client
@@ -17,7 +18,8 @@ module AmazonAthena
     end
 
     def databases!
-      @databases = connection.query("SHOW DATABASES;").raw_output
+      cmd = Commands::ListDatabases.new
+      @databases = cmd.run(connection)
     end
 
     def database_drop(database)
