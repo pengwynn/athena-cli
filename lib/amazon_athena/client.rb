@@ -4,6 +4,10 @@ require_relative "commands"
 module AmazonAthena
   class Client
 
+    extend Forwardable
+
+    def_delegators :connection, :query, :execute
+
     def initialize(key: nil, secret: nil, region: "us-east-1", s3_staging_dir: nil)
       @key = key || ENV["AWS_ACCESS_KEY"]
       @secret = secret || ENV['AWS_SECRET_KEY']
@@ -19,6 +23,17 @@ module AmazonAthena
 
     def database_drop(database)
       cmd = AmazonAthena::Commands::DropDatabase.new(database)
+
+      run(cmd)
+    end
+
+    def database_create(name:, location: nil, comment: nil, properties: {})
+      cmd = AmazonAthena::Commands::CreateDatabase.new(
+        name: name, 
+        location: location,
+        comment: comment,
+        properties: properties
+      )
 
       run(cmd)
     end
@@ -94,6 +109,5 @@ module AmazonAthena
 
       cmd.run(connection)
     end
-
   end
 end
