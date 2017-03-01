@@ -90,13 +90,9 @@ module AmazonAthena
     end
 
     def run(cmd, preview = false)
-      output = if preview
-                 cmd.preview
-               else
-                 cmd.run(connection)
-               end
+      return cmd.preview if preview
 
-      output
+      cmd.run(connection)
     end
 
   end
