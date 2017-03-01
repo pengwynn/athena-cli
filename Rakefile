@@ -10,7 +10,7 @@ Rake::RDocTask.new do |rd|
   rd.title = 'Your application title'
 end
 
-spec = eval(File.read('athena.gemspec'))
+spec = eval(File.read('athena-cli.gemspec'))
 
 Gem::PackageTask.new(spec) do |pkg|
 end
@@ -38,7 +38,7 @@ task :wip => 'features:wip'
 require 'rake/testtask'
 Rake::TestTask.new do |t|
   t.libs << "test"
-  t.test_files = FileList['test/*_test.rb']
+  t.test_files = FileList['test/**/*_test.rb']
 end
 
 task :default => [:test,:features]
