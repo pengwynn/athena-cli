@@ -1,4 +1,7 @@
 # Ensure we require the local version and not one we might have installed already
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
 require File.join([File.dirname(__FILE__),'lib','amazon_athena','version.rb'])
 spec = Gem::Specification.new do |s| 
   s.name = 'athena-cli'
