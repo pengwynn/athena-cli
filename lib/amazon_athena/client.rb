@@ -1,5 +1,5 @@
 require "jdbc_helper/athena"
-require_relative "commands/list_databases"
+require_relative "commands"
 
 module AmazonAthena
   class Client
@@ -12,85 +12,70 @@ module AmazonAthena
     end
 
     def databases
-      return @databases if defined?(@databases)
+      cmd = AmazonAthena::Commands::ShowDatabases.new
 
-      databases!
-    end
-
-    def databases!
-      cmd = Commands::ListDatabases.new
-      @databases = cmd.run(connection)
+      run(cmd)
     end
 
     def database_drop(database)
-      "(TODO): DROP DATABASE #{database_table};"
+      cmd = AmazonAthena::Commands::DropDatabase.new(database)
+
+      run(cmd)
     end
 
     def tables(database)
-      return @tables[database] if defined?(@tables) && @tables[database]
+      cmd = AmazonAthena::Commands::ShowTables.new(database)
 
-      tables!(database)
-    end
-
-    def tables!(database)
-      @tables ||= {}
-      @tables[database] = connection.query("SHOW TABLES IN #{database};").raw_output
+      run(cmd)
     end
 
     def table_drop(database_table)
-      "(TODO): DROP TABLE #{database_table};"
+      cmd = AmazonAthena::Commands::DropTable.new(database)
+
+      run(cmd)
     end
 
     def table_columns(database_table)
-      connection.query("SHOW COLUMNS IN #{database_table}").raw_output
+      cmd = AmazonAthena::Commands::ShowColumns.new(database_table)
+
+      run(cmd)
     end
 
     def table_show_create(database_table)
-      connection.query("SHOW CREATE TABLE #{database_table};").raw_output
+      cmd = AmazonAthena::Commands::ShowCreateTable.new(database_table)
+
+      run(cmd)
     end
 
     def table_describe(database_table)
-      connection.query("DESCRIBE #{database_table};").raw_output
+      cmd = AmazonAthena::Commands::DescribeTable.new(database_table)
+
+      run(cmd)
     end
 
     def table_repair(database_table)
-      connection.query("MSCK REPAIR TABLE #{database_table};")
+      cmd = AmazonAthena::Commands::RepairTable.new(database_table)
+      run(cmd)
 
-      partitions!(database_table)
+      partitions(database_table)
     end
 
     def table_properties(database_table)
-      result = connection.query("SHOW TBLPROPERTIES #{database_table};").raw_output
-      data = Hash[*result.split("\n").map {|line| line.split("\t")}.flatten]
+      cmd = AmazonAthena::Commands::ShowTableProperties.new(database_table)
 
-      data[:name] = database_table
-
-      if type = data.delete('EXTERNAL')
-        data[:external] = type
-      end
-
-      if last_modified = data.delete('transient_lastDdlTime')
-        data[:last_modified] = Time.at(last_modified.to_i)
-      end
-
-      data
+      run(cmd)
     end
 
     def partitions(table)
-      return @partitions[table] if defined?(@partitions) && @partitions[table]
+      cmd = AmazonAthena::Commands::ShowPartitions.new(database_table)
 
-      partitions!(table)
-    end
-
-    def partitions!(table)
-      @partitions ||= {}
-      @partitions[table] = connection.query("SHOW PARTITIONS #{table};").raw_output
+      run(cmd)
     end
 
     def partitions_drop(database_table, partitions_expression)
-      sql = "ALTER TABLE #{database_table} DROP #{partitions_expression}"
+      cmd = AmazonAthena::Commands::DropPartition.new(database_table, partitions)
 
-      sql
+      run(cmd)
     end
 
     def connection
@@ -103,5 +88,16 @@ module AmazonAthena
         s3_staging_dir: @s3_staging_dir
       )
     end
+
+    def run(cmd, preview = false)
+      output = if preview
+                 cmd.preview
+               else
+                 cmd.run(connection)
+               end
+
+      output
+    end
+
   end
 end
