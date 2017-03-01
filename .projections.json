@@ -1,0 +1,20 @@
+{
+  "test/*_test.rb": {
+    "alternate": [
+      "{}.rb"
+    ],
+    "type": "test"
+  },
+  "lib/amazon_athena/commands/*.rb": {
+    "alternate": [
+      "test/lib/amazon_athena/commands/{}_test.rb"
+    ],
+    "type": "command"
+  },
+  "lib/*.rb": {
+    "alternate": [
+      "test/lib/{}_test.rb"
+    ],
+    "type": "lib"
+  }
+}
