@@ -1,13 +1,15 @@
+require_relative '../command'
+
 module AmazonAthena
   module Commands
-    class ListDatabases
+    class ShowDatabases < AmazonAthena::Command
 
       def statement
         "SHOW DATABASES;"
       end
 
       def run(connection)
-        connection.query(statement).raw_output
+        connection.query(statement).map {|row| row.database_name }
       end
     end
   end
