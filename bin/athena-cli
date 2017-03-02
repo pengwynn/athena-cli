@@ -1,8 +1,13 @@
 #!/usr/bin/env jruby
-#
+
+if %x(ruby -v) !~ /jruby/
+  puts "athena-cli requires jruby"
+  exit
+end
+
 require 'gli'
 require 'amazon_athena'
-require 'amazon_athena/commands/list_databases'
+require 'amazon_athena/commands/show_databases'
 
 def athena
   AmazonAthena::Client.new
@@ -46,9 +51,9 @@ command :database do |c|
   c.desc "List databases"
   c.command :list do |add|
     add.action do |global_options,options,args|
-      cmd = AmazonAthena::Commands::ListDatabases.new
+      cmd = AmazonAthena::Commands::ShowDatabases.new
 
-      execute(cmd, global_options[:p])
+      render athena.run(cmd, global_options[:p])
     end
   end
 
@@ -56,7 +61,9 @@ command :database do |c|
   c.arg_name "database"
   c.command :create do |add|
     add.action do |global_options,options,args|
-      puts athena.database_create(args.first)
+      cmd = AmazonAthena::Commands::CreateDatabase.new(args.first)
+
+      render athena.run(cmd, global_options[:p])
     end
   end
 
@@ -64,9 +71,13 @@ command :database do |c|
   c.arg_name "database"
   c.command :drop do |add|
     add.action do |global_options,options,args|
-      puts athena.database_drop(args.first)
+      cmd = AmazonAthena::Commands::DropDatabase.new(args.first)
+
+      render athena.run(cmd, global_options[:p])
     end
   end
+
+  c.default_command :list
 end
 
 desc 'Manage tables in Athena databases'
@@ -75,7 +86,7 @@ command :table do |c|
   c.arg_name "database.table"
   c.command :create do |add|
     add.action do |global_options,options,args|
-      puts "TODO: Create table"
+      render "TODO: Create table"
     end
   end
 
@@ -83,15 +94,19 @@ command :table do |c|
   c.arg_name "database.table"
   c.command :describe do |add|
     add.action do |global_options,options,args|
-      puts athena.table_describe(args.first)
+      cmd = AmazonAthena::Commands::DescribeTable.new(args.first)
+
+      render athena.run(cmd, global_options[:p])
     end
   end
 
   c.desc "List tables in a database"
-  c.arg_name "database.table"
+  c.arg_name "database"
   c.command :list do |add|
     add.action do |global_options,options,args|
-      puts athena.tables(args.first)
+      cmd = AmazonAthena::Commands::ShowTables.new(args.first)
+
+      render athena.run(cmd, global_options[:p])
     end
   end
 
@@ -99,9 +114,9 @@ command :table do |c|
   c.arg_name "database.table"
   c.command :properties do |add|
     add.action do |global_options,options,args|
-      data = athena.table_properties(args.first)
+      cmd = AmazonAthena::Commands::ShowTableProperties.new(args.first)
 
-      table(data)
+      render athena.run(cmd, global_options[:p])
     end
   end
 
@@ -109,7 +124,9 @@ command :table do |c|
   c.arg_name "database.table"
   c.command :show do |add|
     add.action do |global_options,options,args|
-      puts athena.table_show_create(args.first)
+      cmd = AmazonAthena::Commands::ShowCreateTable.new(args.first)
+
+      render athena.run(cmd, global_options[:p])
     end
   end
 
@@ -117,7 +134,14 @@ command :table do |c|
   c.arg_name "database.table"
   c.command :repair do |add|
     add.action do |global_options,options,args|
-      puts athena.table_repair(args.first)
+      commands = [
+        AmazonAthena::Commands::RepairTable.new(args.first),
+        AmazonAthena::Commands::ShowPartitions.new(args.first),
+      ]
+
+      commands.each do |cmd|
+        render athena.run(cmd, global_options[:p])
+      end
     end
   end
 
@@ -125,7 +149,9 @@ command :table do |c|
   c.arg_name "database.table"
   c.command :drop do |add|
     add.action do |global_options,options,args|
-      puts athena.table_drop(args.first)
+      cmd = AmazonAthena::Commands::DropTable.new(args.first)
+
+      render athena.run(cmd, global_options[:p])
     end
   end
 end
@@ -136,20 +162,24 @@ command :column do |c|
   c.arg_name "database.table"
   c.command :list do |add|
     add.action do |global_options,options,args|
-      puts athena.table_columns(args.first)
+      cmd = AmazonAthena::Commands::ShowColumns.new(args.first)
+
+      render athena.run(cmd, global_options[:p])
     end
   end
 
   c.default_command :list
 end
 
-desc 'Manage partitions in Athena database tables'
+desc 'Manage partitions in Athena tables'
 command :partition do |c|
   c.desc "List partitions in a table"
   c.arg_name "database.table"
   c.command :list do |add|
     add.action do |global_options,options,args|
-      puts athena.partitions(args.first)
+      cmd = AmazonAthena::Commands::ShowPartitions.new(args.first)
+
+      render athena.run(cmd, global_options[:p])
     end
   end
 
@@ -158,7 +188,7 @@ command :partition do |c|
   c.arg "key=value,key=value:key=value,key=value"
   c.command :drop do |add|
     add.action do |global_options,options,args|
-      puts athena.partitions_drop(*args)
+      puts "TODO"
     end
   end
 end
@@ -215,21 +245,22 @@ def check_class_path
   end
 end
 
-def table(data)
+def details(data)
   longest_key = data.keys.max_by(&:length)
   data.each do |key, value|
     printf "%##{longest_key.length}s %s\n", key, value
   end
 end
 
-def execute(cmd, preview = false)
-  output = if preview
-             cmd.statement
-           else
-             cmd.run(athena.connection)
-           end
-
-  puts output
+def render(output)
+  case output
+  when Hash
+    details(output)
+  when String, Array
+    puts output
+  else
+    return
+  end
 end
 
 exit run(ARGV)
