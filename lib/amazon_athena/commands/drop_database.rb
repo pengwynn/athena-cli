@@ -9,11 +9,13 @@ module AmazonAthena
       end
 
       def statement
-        "DROP DATABASE #{@database_name};"
+        "DROP DATABASE IF EXISTS #{@database_name};"
       end
 
       def run(connection)
-        connection.query(statement).raw_output
+        connection.query(statement)
+
+        return
       end
     end
   end
