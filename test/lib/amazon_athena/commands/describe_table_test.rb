@@ -8,12 +8,15 @@ describe AmazonAthena::Commands::DescribeTable do
   end
 
   it "provides a db statement" do
-    assert_equal "DESCRIBE TABLE mydb.mytable;", @cmd.statement
+    assert_equal "DESCRIBE mydb.mytable;", @cmd.statement
   end
 
   it "executes a query" do
+    results = MiniTest::Mock.new
+    results.expect(:raw_output, nil)
+
     conn = MiniTest::Mock.new
-    conn.expect(:query, [], ["DESCRIBE TABLE mydb.mytable;"])
+    conn.expect(:query, results, ["DESCRIBE mydb.mytable;"])
 
     @cmd.run(conn)
   end

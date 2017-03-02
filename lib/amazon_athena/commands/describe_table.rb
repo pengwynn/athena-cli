@@ -9,13 +9,12 @@ module AmazonAthena
       end
 
       def statement
-        "DESCRIBE TABLE #{@database_table};"
+        "DESCRIBE #{@database_table};"
       end
 
       def run(connection)
-        connection.query(statement).to_a #map {|row| row.tab_name }
+        connection.query(statement).raw_output
       end
-
     end
   end
 end
