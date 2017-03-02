@@ -8,13 +8,13 @@ describe AmazonAthena::Commands::CreateDatabase do
   end
 
   it "provides a statement" do
-    cmd = @klass.new(name: "mydb")
+    cmd = @klass.new("mydb")
 
     assert_equal "CREATE DATABASE IF NOT EXISTS mydb;", cmd.statement
   end
 
   it "executes a query" do
-    cmd = @klass.new(name: "mydb")
+    cmd = @klass.new("mydb")
 
     results = MiniTest::Mock.new
     results.expect(:raw_output, nil)

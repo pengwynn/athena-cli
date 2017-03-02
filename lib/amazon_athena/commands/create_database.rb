@@ -14,6 +14,8 @@ module AmazonAthena
 
       def run(connection)
         connection.query(statement)
+
+        return
       end
     end
   end
