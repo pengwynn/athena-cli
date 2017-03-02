@@ -75,7 +75,7 @@ end
 
 desc 'Manage tables in Athena databases'
 command :table do |c|
-  c.desc "Create table"
+  c.desc "TODO: Create table"
   c.arg_name "database.table"
   c.command :create do |add|
     add.action do |global_options,options,args|
@@ -176,7 +176,7 @@ command :partition do |c|
     end
   end
 
-  c.desc "Add partition(s) to a table"
+  c.desc "TODO: Add partition(s) to a table"
   c.arg "database.table"
   c.arg "key=value,key=value:key=value,key=value"
   c.command :add do |add|
@@ -185,7 +185,7 @@ command :partition do |c|
     end
   end
 
-  c.desc "Drop partition(s) from a table"
+  c.desc "TODO: Drop partition(s) from a table"
   c.arg "database.table"
   c.arg "key=value,key=value:key=value,key=value"
   c.command :drop do |add|
