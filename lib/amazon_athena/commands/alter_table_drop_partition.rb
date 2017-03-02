@@ -1,24 +1,21 @@
 require_relative '../command'
+require_relative '../partition'
 
 module AmazonAthena
   module Commands
     class AlterTableDropPartition < AmazonAthena::Command
 
-      def initialize(database_table, partitions_expression)
+      def initialize(database_table, partitions)
         @database_table = database_table
-        @partitions_expression = partitions_expression
-      end
-
-      def partitions
-        []
+        @partitions = partitions
       end
 
       def partition_clauses
-        # TODO
+        @partitions.map {|p| "  #{p}"}.join(",\n")
       end
 
       def statement
-        "ALTER TABLE #{@database_table} DROP #{partitions_clauses}"
+        "ALTER TABLE #{@database_table} DROP\n#{partition_clauses};"
       end
 
       def run(connection)
