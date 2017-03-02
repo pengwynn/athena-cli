@@ -29,7 +29,7 @@ module AmazonAthena
 
     def database_create(name:, location: nil, comment: nil, properties: {})
       cmd = AmazonAthena::Commands::CreateDatabase.new(
-        name: name, 
+        name: name,
         location: location,
         comment: comment,
         properties: properties
