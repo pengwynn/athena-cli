@@ -1,4 +1,5 @@
 require_relative '../command'
+require_relative '../partition'
 
 module AmazonAthena
   module Commands
@@ -10,11 +11,11 @@ module AmazonAthena
       end
 
       def partition_clauses
-        # TODO
+        @partitions.map {|p| "  #{p}"}.join("\n")
       end
 
       def statement
-        "ALTER TABLE #{@database_table} ADD #{partition_clauses}"
+        "ALTER TABLE #{@database_table} ADD\n#{partition_clauses};"
       end
 
       def run(connection)
