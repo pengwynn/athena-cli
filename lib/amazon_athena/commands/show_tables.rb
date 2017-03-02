@@ -14,8 +14,9 @@ module AmazonAthena
 
       def run(connection)
         connection.query(statement).map {|row| row.tab_name }
+      rescue Exception => e
+        e.getCause()
       end
-
     end
   end
 end
