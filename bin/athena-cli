@@ -86,7 +86,7 @@ command :table do |c|
   c.arg_name "database.table"
   c.command :create do |add|
     add.action do |global_options,options,args|
-      render "TODO: Create table"
+      render "NOT IMPLEMENTED: Create table"
     end
   end
 
@@ -183,14 +183,25 @@ command :partition do |c|
     end
   end
 
-  c.desc "Drop partitions in a table"
+  c.desc "Add partition(s) to a table"
+  c.arg "database.table"
+  c.arg "key=value,key=value:key=value,key=value"
+  c.command :add do |add|
+    add.action do |global_options,options,args|
+      render "NOT IMPLEMENTED"
+    end
+  end
+
+  c.desc "Drop partition(s) from a table"
   c.arg "database.table"
   c.arg "key=value,key=value:key=value,key=value"
   c.command :drop do |add|
     add.action do |global_options,options,args|
-      puts "TODO"
+      render "NOT IMPLEMENTED"
     end
   end
+
+  c.default_command :list
 end
 
 pre do |global,command,options,args|
