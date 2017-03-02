@@ -15,6 +15,11 @@ module AmazonAthena
       def run(connection)
         # TODO: Map fields directly
         connection.query(statement).raw_output
+      rescue Exception => e
+        case e.message
+        when /not a partitioned table/
+          "Error: #{@database_table} is not a partitioned table."
+        end
       end
 
     end
