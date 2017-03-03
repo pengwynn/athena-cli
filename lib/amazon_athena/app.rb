@@ -1,6 +1,5 @@
 require 'gli'
 require 'amazon_athena'
-require 'amazon_athena/commands/show_databases'
 
 def athena
   AmazonAthena::Client.new
