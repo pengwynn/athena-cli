@@ -5,7 +5,7 @@ module AmazonAthena
     class ShowTables < AmazonAthena::Command
 
       def initialize(database_name)
-        @database_name = database_name
+        @database_name = database_name.strip
       end
 
       def statement

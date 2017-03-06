@@ -38,6 +38,52 @@ command :doctor do |c|
   end
 end
 
+desc 'Manage Athena schemas'
+command :schema do |c|
+  c.desc "Dump schemas to a local folder"
+  c.command :dump do |add|
+    add.flag :path,
+      :required => true,
+      :desc => "Local path for saving schemas"
+    add.action do |global_options,options,args|
+      path = options[:path]
+
+      unless File.exists?(path)
+        exit_now! "Path #{path} not found"
+      end
+
+      databases = athena.run(AmazonAthena::Commands::ShowDatabases.new)
+      preview = !!global_options[:p]
+
+      databases.each do |db|
+        folder = File.join(path, db)
+        prefix = File.exists?(folder) ? "Exists" : "Creating"
+        render "#{prefix} #{folder}"
+
+        unless preview
+          FileUtils.mkdir_p(folder)
+        end
+
+        tables = athena.run(AmazonAthena::Commands::ShowTables.new(db))
+
+        tables.each do |table|
+          database_table = [db, table].join(".")
+          file = File.join(folder, table) + ".sql"
+          render "Writing #{file}"
+
+          if !preview
+            sql = athena.run(AmazonAthena::Commands::ShowCreateTable.new(database_table))
+
+            File.open(file, 'w') { |f| f.write(sql) }
+          end
+        end
+      end
+
+      # puts global_options, options, args
+    end
+  end
+end
+
 desc 'Manage Athena databases'
 command :database do |c|
   c.desc "List databases"
