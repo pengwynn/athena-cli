@@ -133,11 +133,30 @@ end
 
 desc 'Manage tables in Athena databases'
 command :table do |c|
-  c.desc "TODO: Create table"
-  c.arg_name "database.table"
+  c.desc "Create table"
+  c.arg_name "path/to/schema-ddl"
   c.command :create do |add|
+    add.flag [:l, :location], :desc => "S3 location - s3://bucket/path/"
+    add.flag [:n, :name], :desc => "Fully qualifed name as: database.table"
     add.action do |global_options,options,args|
-      render "NOT IMPLEMENTED: Create table"
+      ddl = if filename = args.first
+              exit_now! "File not found" unless File.exists?(filename)
+              File.read(filename)
+            elsif !STDIN.tty?
+              $stdin.read
+            end
+
+      exit_now! "Must supply path to file or pass via STDIN" if ddl.to_s.empty?
+
+
+      opts = {
+        :name => options[:name],
+        :location => options[:location]
+      }
+
+      ddl = AmazonAthena::Transformer.transform_table(ddl, opts)
+
+      render ddl
     end
   end
 
