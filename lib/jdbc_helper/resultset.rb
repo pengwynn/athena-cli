@@ -7,7 +7,7 @@ module JDBCHelper
           lines << @rset.getString(column_index)
         end while @rset.next
 
-        lines.join("\n")
+        lines.map(&:rstrip).join("\n")
       end
     end
   end
