@@ -8,7 +8,6 @@ end
 include GLI::App
 
 program_desc 'CLI for Amazon Athena'
-
 version AmazonAthena::VERSION
 
 subcommand_option_handling :normal
@@ -18,6 +17,20 @@ switch [:p, :preview],
   :default_value => false,
   :desc => "Output the SQL statement instead of running",
   :negatable => false
+
+flag ["key"],
+  :default_value => ENV["AWS_ACCESS_KEY"],
+  :mask => true,
+  :desc => "AWS Access Key"
+
+flag ["secret"],
+  :default_value => ENV["AWS_SECRET_KEY"],
+  :mask => true,
+  :desc => "AWS Secret Key"
+
+flag ["staging-dir"],
+  :default_value => ENV["ATHENA_S3_STAGING_DIR"],
+  :desc => "S3 bucket for staging results"
 
 desc 'Check for required AWS setup'
 command :doctor do |c|
@@ -243,7 +256,11 @@ command :partition do |c|
 end
 
 pre do |global,command,options,args|
+  @access_key     = global[:key]
+  @access_secret  = global[:secret]
+  @staging_folder = global["staging-dir"]
   check_class_path
+
   true
 end
 
@@ -260,15 +277,15 @@ on_error do |exception|
 end
 
 def access_key
-  ENV['AWS_ACCESS_KEY']
+  @access_key
 end
 
 def access_secret
-  ENV['AWS_SECRET_KEY']
+  @access_secret
 end
 
 def staging_folder
-  ENV['ATHENA_S3_STAGING_DIR']
+  @staging_folder
 end
 
 def class_path
