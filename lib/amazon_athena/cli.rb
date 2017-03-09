@@ -1,5 +1,6 @@
 require 'gli'
 require 'amazon_athena'
+require 'table_print'
 
 module AmazonAthena
   module CLI
@@ -344,8 +345,15 @@ module AmazonAthena
       case output
       when Hash
         details(output)
-      when String, Array
+      when String
         puts output
+      when Array
+        case output.first
+        when Hash
+          tp output
+        else
+          puts output
+        end
       else
         return
       end
