@@ -265,6 +265,32 @@ module AmazonAthena
       c.default_command :list
     end
 
+    desc 'Run a query from a file or STDIN'
+    arg_name '[file]'
+    command :query do |c|
+      c.action do |global_options,options,args|
+        input = args.first
+        sql = case input
+              when "", NilClass
+                $stdin.read if !STDIN.tty?
+              when String
+                if File.exists?(input)
+                  File.read(input)
+                else
+                  input
+                end
+              else
+                exit_now! "SQL string or file path required"
+              end
+
+        if global_options[:p]
+          render sql
+        else
+          render athena.query(sql).map(&:to_h)
+        end
+      end
+    end
+
     pre do |global,command,options,args|
       @access_key     = global[:key]
       @access_secret  = global[:secret]
