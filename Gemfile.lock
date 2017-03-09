@@ -4,6 +4,7 @@ PATH
     athena-cli (0.0.1)
       gli (= 2.5.2)
       jdbc-helper
+      table_print
 
 GEM
   remote: https://rubygems.org/
@@ -57,6 +58,7 @@ GEM
     spoon (0.0.6)
       ffi
     sql_helper (0.1.1)
+    table_print (1.5.6)
     thor (0.19.4)
 
 PLATFORMS

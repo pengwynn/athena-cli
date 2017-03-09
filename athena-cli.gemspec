@@ -21,4 +21,5 @@ spec = Gem::Specification.new do |s|
   s.add_development_dependency('aruba')
   s.add_runtime_dependency('gli','2.5.2')
   s.add_runtime_dependency('jdbc-helper')
+  s.add_runtime_dependency('table_print')
 end
