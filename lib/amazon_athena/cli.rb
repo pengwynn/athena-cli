@@ -123,7 +123,7 @@ module AmazonAthena
     desc 'Manage tables in Athena databases'
     command :table do |c|
       c.desc "Create table"
-      c.arg_name "path/to/schema-ddl"
+      c.arg_name "[file]"
       c.command :create do |add|
         add.flag [:l, :location], :desc => "S3 location - s3://bucket/path/"
         add.flag [:n, :name], :desc => "Fully qualifed name as: database.table"
