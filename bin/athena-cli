@@ -5,4 +5,6 @@ if %x(ruby -v) !~ /jruby/
   exit
 end
 
-require 'amazon_athena/app'
+require 'amazon_athena/cli'
+
+AmazonAthena::CLI.run(ARGV)
