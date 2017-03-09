@@ -144,7 +144,9 @@ module AmazonAthena
 
           ddl = AmazonAthena::Transformer.transform_table(ddl, opts)
 
-          render ddl
+          cmd = AmazonAthena::Commands::CreateTable.new(ddl)
+
+          render athena.run(cmd, global_options[:p])
         end
       end
 
