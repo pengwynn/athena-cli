@@ -333,11 +333,21 @@ module AmazonAthena
 
     def self.check_aws_settings
       if self.access_key.nil? || self.access_secret.nil?
-        exit_now! "Please configure AWS credentials."
+        msg = <<~MSG
+          athena-cli needs your AWS credentials. You can pass them via the
+          --key and --secret flags or set AWS_ACCESS_KEY and AWS_SECRET_KEY
+          environment variables.
+        MSG
+        exit_now! msg
       end
 
       if self.staging_folder.nil?
-        exit_now! "Please configure S3 staging folder."
+        msg = <<~MSG
+          athena-cli requires an S3 location to use as a scratch folder. 
+          Please provide one via the --staging-dir flag or set the
+          ATHENA_S3_STAGING_DIR environment variable.
+        MSG
+        exit_now! msg, 1
       end
     end
 
@@ -356,7 +366,7 @@ module AmazonAthena
 
             export CLASSPATH="$CLASSPATH:~/src/AthenaJDB41-1.0.0.jar"
         MSG
-        exit_now! msg
+        exit_now! msg, 1
       end
     end
 
