@@ -6,7 +6,10 @@ module AmazonAthena
   module CLI
 
     def self.athena
-      AmazonAthena::Client.new
+      AmazonAthena::Client.new \
+        key: self.access_key,
+        secret: self.access_secret,
+        s3_staging_dir: self.staging_folder
     end
 
     extend GLI::App
