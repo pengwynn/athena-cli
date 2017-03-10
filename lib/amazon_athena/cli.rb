@@ -1,5 +1,6 @@
 require 'gli'
 require 'amazon_athena'
+require 'fileutils'
 require 'table_print'
 
 module AmazonAthena
