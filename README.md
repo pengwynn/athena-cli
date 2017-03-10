@@ -15,20 +15,20 @@ Make sure you have JRuby >= 9.1.6.0.
 Clone the repository:
 
     git clone https://github.com/pengwynn/athena-cli
-    
+
 Install the dependencies:
 
     bundle install
-    
+
 Build the gem:
 
     rake gem
-    
+
 Install it locally
 
     gem install pkg/athena-cli-<version>.gem
 
-##### TODO: Install via Rubygems: 
+##### TODO: Install via Rubygems:
 
 ##### Setting up AWS credentials
 
@@ -45,7 +45,7 @@ Athena requires an S3 scratch folder for storing results. You'll need to set the
 ##### Check your settings
 
     athena-cli doctor
-    
+
 ### Usage
 
 ```
@@ -76,7 +76,7 @@ COMMANDS
     query     - Run a query from a file or STDIN
     schema    - Manage Athena schemas
     table     - Manage tables in Athena databases
-    
+
 ```
 
 ## LICENSE
