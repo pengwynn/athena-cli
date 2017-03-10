@@ -36,7 +36,13 @@ The app will look for your AWS key and secret in the `AWS_ACCESS_KEY` and `AWS_S
 
 ##### Configuring the JDBC driver
 
-The underlying Java code needs to know where you
+The underlying Java code needs to know where to find your [JDBC
+driver](http://docs.aws.amazon.com/athena/latest/ug/connect-with-jdbc.html#downloading-the-driver). Add the path to your `CLASSPATH` environment variable. Something like:
+
+
+Example:
+
+    export CLASSPATH="$CLASSPATH:~/src/AthenaJDB41-1.0.0.jar"
 
 ##### Setting the scratch folder
 
