@@ -52,6 +52,10 @@ Athena requires an S3 scratch folder for storing results. You'll need to set the
 
     athena-cli doctor
 
+If you're calling it outside the repository folder, you'll want to drop a
+[log4j.xml](https://github.com/pengwynn/athena-cli/blob/master/log4j.xml) file
+into that folder to silence the logger.
+
 ### Usage
 
 ```
