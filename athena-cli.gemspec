@@ -11,6 +11,7 @@ spec = Gem::Specification.new do |s|
   s.homepage = 'https://wynnnetherland.com'
   s.platform = Gem::Platform::RUBY
   s.summary = 'A JRuby-powered CLI for Amazon Athena'
+  s.license = ["MIT"]
   s.files = `git ls-files`.split("
 ")
   s.require_paths << 'lib'
