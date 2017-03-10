@@ -1,3 +1,4 @@
+require "forwardable"
 require "jdbc_helper/athena"
 require_relative "commands"
 
