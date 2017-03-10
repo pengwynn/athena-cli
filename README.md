@@ -56,6 +56,14 @@ If you're calling it outside the repository folder, you'll want to drop a
 [log4j.xml](https://github.com/pengwynn/athena-cli/blob/master/log4j.xml) file
 into that folder to silence the logger.
 
+### Hacking on athena-cli
+
+If you're running the project form source, be sure and use
+
+    bundle exec bin/athena-cli
+
+so that the dependencies are properly loaded.
+
 ### Usage
 
 ```
