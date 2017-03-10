@@ -286,7 +286,11 @@ module AmazonAthena
         if global_options[:p]
           render sql
         else
-          render athena.query(sql).map(&:to_h)
+          begin
+            render athena.query(sql).map(&:to_h)
+          rescue Exception => e
+            render e.message
+          end
         end
       end
     end
