@@ -85,6 +85,13 @@ COMMANDS
 
 ```
 
+### TODO
+
+- [ ] Explore more discoverable commands. `show-tables` instead of `table
+    list`
+- [ ] Tests for unhappy paths
+- [ ] Publish to Rubygems
+
 ## LICENSE
 
 Copyright (c) 2017 Wynn Netherland
