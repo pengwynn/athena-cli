@@ -17,10 +17,10 @@ spec = Gem::Specification.new do |s|
   s.require_paths << 'lib'
   s.bindir = 'bin'
   s.executables << 'athena-cli'
-  s.add_development_dependency('rake')
-  s.add_development_dependency('rdoc')
-  s.add_development_dependency('aruba')
+  s.add_development_dependency('rake', '~> 10')
+  s.add_development_dependency('rdoc', '~> 5.1')
+  s.add_development_dependency('aruba', '~> 0.14')
   s.add_runtime_dependency('gli','2.5.2')
-  s.add_runtime_dependency('jdbc-helper')
-  s.add_runtime_dependency('table_print')
+  s.add_runtime_dependency('jdbc-helper', '~> 0.8.2')
+  s.add_runtime_dependency('table_print', '~> 1.5 ')
 end

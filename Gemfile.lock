@@ -3,8 +3,8 @@ PATH
   specs:
     athena-cli (0.0.1)
       gli (= 2.5.2)
-      jdbc-helper
-      table_print
+      jdbc-helper (~> 0.8.2)
+      table_print (~> 1.5)
 
 GEM
   remote: https://rubygems.org/
@@ -48,7 +48,7 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
       spoon (~> 0.0)
-    rake (12.0.0)
+    rake (10.4.2)
     rdoc (5.1.0)
     rspec-expectations (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -65,11 +65,11 @@ PLATFORMS
   java
 
 DEPENDENCIES
-  aruba
+  aruba (~> 0.14)
   athena-cli!
   pry
-  rake
-  rdoc
+  rake (~> 10)
+  rdoc (~> 5.1)
 
 BUNDLED WITH
    1.14.6
