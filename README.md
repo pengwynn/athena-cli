@@ -12,23 +12,9 @@ Make sure you have JRuby >= 9.1.6.0.
 
     jruby -v
 
-Clone the repository:
+Install from Rubygems:
 
-    git clone https://github.com/pengwynn/athena-cli
-
-Install the dependencies:
-
-    bundle install
-
-Build the gem:
-
-    rake gem
-
-Install it locally
-
-    gem install pkg/athena-cli-<version>.gem
-
-##### TODO: Install via Rubygems:
+    gem install athena-cli
 
 ##### Setting up AWS credentials
 
@@ -57,6 +43,14 @@ If you're calling it outside the repository folder, you'll want to drop a
 into that folder to silence the logger.
 
 ### Hacking on athena-cli
+
+Clone the repository:
+
+    git clone https://github.com/pengwynn/athena-cli
+
+Install the dependencies:
+
+    bundle install
 
 If you're running the project form source, be sure and use
 
