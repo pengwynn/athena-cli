@@ -98,6 +98,10 @@ COMMANDS
 - [ ] Tests for unhappy paths
 - [ ] Publish to Rubygems
 
+## Similar projects
+
+- [athenacli](https://github.com/dbcli/athenacli): AthenaCLI is a CLI tool for AWS Athena service that can do auto-completion and syntax highlighting.
+
 ## LICENSE
 
 Copyright (c) 2017 Wynn Netherland
